@@ -17,7 +17,8 @@ int randnum(int n);
 int wr2file(int arr[]);
 int isplit(int arr[]);
 int desplit(int arr[]);
-int compare(int array[][100]);
+int compare(int arr[][100]);
+int check(int arr[][100]);
 
 
 
@@ -30,34 +31,32 @@ int main()
 	randnum(n);
 	wr2file(arrnum);
 
-/*	printf("Enter the type sort (i or d): ");
+	printf("Enter the type sort (i or d): ");
 	scanf("%s", type);
 	switch (type) {
 		case i:
-		do {	*/
+		do {	
 		isplit(arrnum);
-//
+//--------------------------------------------
 	for (i = 0; i < 3; i++) {
 		for(j = 0; j < n; j++) {
 			printf("%d ", sernum[i][j]);
 		}
 		printf("\n");
-//		printf("%d \n", pos[i]);
 	}
 	printf("\n");
-//
+//------------------------------------------------------------------
 		compare(sernum);
-//
+//---------------------------------------------------------------
 	for (i = 0; i < 2; i++) {
 			for(j = 0; j < n; j++) {
 			printf("%d ", sernum2[i][j]);
 		}
 		printf("\n");
-//		printf("%d \n", pos[i]);
 	}
 	return 0;
+		} while ();
 } 
-//		merge();
 		
 	
 
@@ -131,25 +130,23 @@ int compare(int arr[][100]) {
 	g = 2;
 
 	for (h = 0; h < 101; ++h) {
-		i = (i < 3) ? i : 0;
+			
+		i = (i < 3) ? i : 0; 
         	j = (j < 3) ? j : 0;
                 g = (g < 3) ? g : 0;
 
-		if (arr[i][pos1[i]] == 0) //switch
+		if (arr[i][pos1[i]] == 0) 
 			arr[i][pos1[i]] = MAXVAL;
 		if (arr[j][pos1[j]] == 0)
 			arr[j][pos1[j]] = MAXVAL;
 		if (arr[g][pos1[g]] == 0)
 			arr[g][pos1[g]] = MAXVAL;
 	
-		if (arr[i][pos1[i]] == MAXVAL && arr[j][pos1[j]] == MAXVAL && arr[g][pos1[g]] != MAXVAL)
-                        ++p;
-
 		if (arr[i][pos1[i]] == MAXVAL && arr[j][pos1[j]] == MAXVAL && arr[g][pos1[g]] == MAXVAL)
 			break;
 
-                if (arr[g][pos1[g]] <= arr[j][pos1[j]] && arr[j][pos1[j]] <= arr[i][pos1[i]])
-                         sernum2[p][pos2[p]++] = arr[g][pos1[g]++];
+                if (arr[g][pos1[g]] <= arr[j][pos1[j]] && arr[j][pos1[j]] <= arr[i][pos1[i]]) 
+			sernum2[p][pos2[p]++] = arr[g][pos1[g]++];
                 else if (arr[i][pos1[i]] <= arr[j][pos1[j]] && arr[j][pos1[j]] <= arr[g][pos1[g]])
                          sernum2[p][pos2[p]++] = arr[i][pos1[i]++];
  
@@ -161,3 +158,7 @@ int compare(int arr[][100]) {
 	}  
 	return 0;
 }
+
+
+
+int check();
