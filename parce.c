@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 #define MAXNUM 1000000
@@ -15,12 +16,15 @@ int type;
 
 int randnum(int n);
 int wr2file(int arr[]);
+int wr2endfile(int arr[]);
 int isplit(int arr[]);
 int desplit(int arr[]);
 int compare(int arr[][1000000]);
+int decompare(int arr[][1000000]);
 int merge(int arr[][1000000]);
 int check(int arr[]);
-
+int demerge(int arr[][1000000]);
+int decheck(int arr[]);
 
 
 int main()
@@ -30,11 +34,11 @@ int main()
 	printf("\n");
 	randnum(n);
 	wr2file(arrnum);
-	for(j = 0; j < n; j++) {
+	/*for(j = 0; j < n; j++) {
 		printf("%d ", arrnum[j]);
 	}
 	printf("\n");
-
+*/
 
 	printf("Enter the type sort \n 1. increment \n 2. decrement \n $: ");
 	scanf("%d", &type);
@@ -61,10 +65,10 @@ int main()
 		case 2:
 			do {	
 			desplit(arrnum);
-			compare(sernum);
-			merge(sernum2);
+			decompare(sernum);
+			demerge(sernum2);
 
-			if (check(endarr) == 0) 
+			if (decheck(endarr) == 0) 
 				break;
 
 			for (i = 0; i < n; ++i) 
@@ -75,27 +79,31 @@ int main()
 			memset(sernum2, 0, sizeof(sernum2)); 
 			memset(pos, 0, sizeof(pos));
 
-			} while (check(endarr) == -1);
+			} while (decheck(endarr) == -1);
 			break;
-			printf("don't work\n");
 	}
+	wr2endfile(endarr);
 	printf("\n");
-       	for (i = 0; i < 3; i++) {
-		for(j = 0; j < n; j++) {
+
+	/*for (i = 0; i < 3; i++) {
+		for (j = 0; j < n; j++) {
 			printf("%d ", sernum[i][j]);
 		}
 		printf("\n");
 	}
-	printf("\n");
+		printf("\n");
 
 	for (i = 0; i < 2; i++) {
-		for(j = 0; j < n; j++) {
+		for (j = 0; j < n; j++) {
 			printf("%d ", sernum2[i][j]);
-		}	
-		printf("\n");
+		}
+			printf("\n");
+
 	}
-	printf("\n");	
-	for(j = 0; j < n; j++) {
+			printf("\n");
+*/
+	printf("\n");
+       	for (j = 0; j < n; j++) {
 		printf("%d ", endarr[j]);
 	}
 	printf("\n");
@@ -118,6 +126,21 @@ int wr2file(int arr[]) {
 	FILE *in;
 	
 	if ((in = fopen("arrnum","w+")) == NULL) 
+		exit(1);		
+
+	for (i = 0; i < n; ++i) {
+		fprintf(in, "%d  %d\n", i, arr[i]);
+	}
+	fclose(in);
+
+	return 0;
+}
+
+
+int wr2endfile(int arr[]) {
+	FILE *in;
+	
+	if ((in = fopen("endarr","w+")) == NULL) 
 		exit(1);		
 
 	for (i = 0; i < n; ++i) {
@@ -164,7 +187,6 @@ int desplit(int arr[]) {
 
 
 int compare(int arr[][1000000]) {
-	int h;
 	int pos1[3]={0};
 	int pos2[2]={0};
 
@@ -215,15 +237,55 @@ int compare(int arr[][1000000]) {
 
 
 
+int decompare(int arr[][1000000]) {
+	int nc;
+	int pos1[3]={0};
+	int pos2[2]={0};
+
+	i = 2;
+	j = 1;
+	g = 0;
+	nc = n;
+
+	do {	
+		i = (i < 3) ? i : 0; 
+        	j = (j < 3) ? j : 0;
+                g = (g < 3) ? g : 0;
+
+                if (arr[g][pos1[g]] >= arr[j][pos1[j]] && arr[j][pos1[j]] >= arr[i][pos1[i]]) {
+			if (arr[i][pos1[i]] == 0 && arr[j][pos1[j]] == 0 && arr[g][pos1[g]] != 0) {
+				sernum2[1][pos2[1]++] = arr[g][pos1[g]++];
+				--nc;
+			}
+			else {
+				sernum2[0][pos2[0]++] = arr[g][pos1[g]++];
+				--nc;
+			}
+		} else if (arr[i][pos1[i]] >= arr[j][pos1[j]] && arr[j][pos1[j]] >= arr[g][pos1[g]]) {
+			if (arr[g][pos1[g]] == 0 && arr[j][pos1[j]] == 0 && arr[i][pos1[i]] != 0) {
+				--nc;
+				sernum2[1][pos2[1]++] = arr[i][pos1[i]++];
+			}
+			else {
+                        	sernum2[0][pos2[0]++] = arr[i][pos1[i]++];
+				--nc;
+			}
+ 		} else {
+                        ++i;
+                        ++j;
+                        ++g;
+                }
+	} while (nc != 0);
+	return 0;
+}
+
+
+
 int merge(int arr[][1000000]) {
 	int j = 0;
 	for (i = 0; i < n; ++i) {
-		if (arr[0][i] == 0)
-			arr[0][i] = MAXVAL;
-		if (arr[1][j] == 0)
-			arr[1][j] = MAXVAL;
-
-		if (arr[0][i] <= arr[1][j]) {
+		
+		if (arr[0][i] <= arr[1][j] && arr[0][i] != 0) {
 			endarr[i] = arr[0][i];
 		}
 		else {
@@ -234,9 +296,35 @@ int merge(int arr[][1000000]) {
 	return 0;	
 }
 
+
+
+int demerge(int arr[][1000000]) {
+	int j = 0;
+	for (i = 0; i < n; ++i) {
+		
+		if (arr[0][i] >= arr[1][j] && arr[0][i] != 0) {
+			endarr[i] = arr[0][i];
+		}
+		else {
+			endarr[i] = arr[1][j];
+			j++;
+		}
+	}
+	return 0;	
+}
+
+
+
 int check(int arr[]) {
 	for (i = 1; i < n; ++i) 
 		if (arr[i - 1] > arr[i])
+			return -1;
+	return 0;
+}
+
+int decheck(int arr[]) {
+	for (i = 1; i < n; ++i) 
+		if (arr[i - 1] < arr[i])
 			return -1;
 	return 0;
 }
